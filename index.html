@@ -33,35 +33,46 @@
         let rewardStatistics = [];
         let anonymousStatistics = [
   {
-    "count": 1,
-    "total": 10.0,
+    "count": 2,
+    "total": 35.0,
     "who": "Other"
   }
 ];
         let decimalStatistics = [
   {
     "after_decimal": "00",
-    "amount": 1
+    "amount": 2
   }
 ];
         let decimalWarStatistics = [
   {
     "after_decimal": "00",
-    "minutes": 0.0,
-    "percentage_of_total": NaN
+    "minutes": 12.42,
+    "percentage_of_total": 100.0
   }
 ];
         let decimalWarStreamStatistics = [];
         let donationStatistics = [
   {
     "rewards": 0,
-    "total": 10.0,
-    "count": 1
+    "total": 35.0,
+    "count": 2
   }
 ];
         let rewardCombinations = [];
         let moneyFormatterParams = {"symbol": "$"};
-        let donationsBreakdown = [];
+        let donationsBreakdown = [
+  [
+    10,
+    20,
+    1
+  ],
+  [
+    20,
+    30,
+    1
+  ]
+];
 
         function percentage(cell, formatterParams, onRendered) {
             return Math.round(cell.getValue() * 100) / 100 + " %"
@@ -779,7 +790,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        1199 / 1200
+        1198 / 1200
     
 </button>
 
@@ -884,7 +895,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        674 / 675
+        675 / 675
     
 </button>
 
@@ -954,7 +965,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        84 / 85
+        83 / 85
     
 </button>
 
@@ -1024,7 +1035,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        1419 / 1420
+        1420 / 1420
     
 </button>
 
@@ -1094,7 +1105,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        460 / 460
+        459 / 460
     
 </button>
 
@@ -1541,7 +1552,7 @@
                     <h2>Decimal war</h2>
                     
                     <p>
-                        <abbr title="This value may not be accurate as some donations are revoked after being made.">The total on Tiltify is currently: 10.00.</abbr>
+                        <abbr title="This value may not be accurate as some donations are revoked after being made.">The total on Tiltify is currently: 35.00.</abbr>
                     </p>
                 </div>
             </div>
@@ -1568,6 +1579,11 @@
             <div class="row">
                 <div class="col">
                     <h2>Polls</h2>
+                    
+                        <p>
+                            Data last retrieved Feb. 10, 2026, 5:15 p.m. UTC.
+                            This section shows the last available results from the API, not the final amount at time of closing.
+                        </p>
                     
                     <table class="table" style="max-width: 2000px; margin: 0 auto;">
                         <thead>
@@ -1606,7 +1622,7 @@
     </div>
 </div>
 <footer class="footer fixed-bottom text-center bg-light">
-    Generated: Feb. 10, 2026, 5:14 p.m. UTC.
+    Generated: Feb. 10, 2026, 5:24 p.m. UTC.
     Developed by <a href="https://www.mikulaspoul.cz/" target="_blank">Miki</a>,
     source on <a target="_blank" href="https://github.com/mikicz/p4a-portal">GitHub</a>.
 </footer>
