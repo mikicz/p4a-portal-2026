@@ -1,10 +1,1706 @@
 
+
 <!doctype html>
 <html lang="en">
 <head>
-  <title>Server Error (500)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+            integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.4.3/js/tabulator.min.js"
+            integrity="sha512-xu/xzHeJxvPLt6tuy68mvBtY4XCDpGmMe1AV4+S1viFUvy0Qygmoq1yePeDenRRNRSqYx3GvucTAnsGiO0FRaA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.4.3/js/jquery_wrapper.min.js"
+            integrity="sha512-Q+u5tqLUv7zbQ1QBm6Pcwc2N2PbqrRC//Ze2YGnlSe5TBbO0KrCYZ/WvgjTlNnzVtOHU9pNoztQjJxpSXa5boQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.4.3/css/tabulator.min.css"
+          integrity="sha512-gHU0A38WiT7Jyubh7KcU6af64wRVBnNEB1541Ue5W050dRL/f21IWkAD8sl85nVjPyLnbffiXsCborGDQ55bYQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <script type="application/javascript">
+        let rewardStatistics = [];
+        let anonymousStatistics = [
+  {
+    "count": 1,
+    "total": 10.0,
+    "who": "Other"
+  }
+];
+        let decimalStatistics = [
+  {
+    "after_decimal": "00",
+    "amount": 1
+  }
+];
+        let decimalWarStatistics = [
+  {
+    "after_decimal": "00",
+    "minutes": 0.0,
+    "percentage_of_total": NaN
+  }
+];
+        let decimalWarStreamStatistics = [];
+        let donationStatistics = [
+  {
+    "rewards": 0,
+    "total": 10.0,
+    "count": 1
+  }
+];
+        let rewardCombinations = [];
+        let moneyFormatterParams = {"symbol": "$"};
+        let donationsBreakdown = [];
+
+        function percentage(cell, formatterParams, onRendered) {
+            return Math.round(cell.getValue() * 100) / 100 + " %"
+        }
+
+        $(document).ready(function () {
+            $("#reward-statistics").tabulator({
+                data: rewardStatistics,
+                layout: "fitColumns",
+                height: 800,
+                columns: [
+                    {"title": "Reward name", "field": "name"},
+                    {
+                        "title": "Base price", "field": "base_price", "formatter": "money",
+                        "formatterParams": moneyFormatterParams, "width": 150
+                    },
+                    {"title": "Count", "field": "count", "width": 75},
+                    {
+                        "title": "Total raised (minimum)", "field": "total", "formatter": "money",
+                        "formatterParams": moneyFormatterParams, "width": 250
+                    },
+                    {
+                        "title": "Approx percentage of total", "field": "percentage_of_total", "formatter": percentage,
+                        "width": 175
+                    },
+                    {
+                        "title": "Sold out in",
+                        "field": "sold_out_in",
+                        "width": 100
+                    }
+                ]
+            });
+            $("#donation-statistics").tabulator({
+                data: donationStatistics,
+                layout: "fitColumns",
+                columns: [
+                    {"title": "Rewards in donation", "field": "rewards"},
+                    {"title": "Count", "field": "count", "width": 75},
+                    {
+                        "title": "Raised", "field": "total", "formatter": "money",
+                        "formatterParams": moneyFormatterParams, "width": 150
+                    },
+                ]
+            });
+            $("#reward-combinations").tabulator({
+                data: rewardCombinations,
+                layout: "fitColumns",
+                height: 500,
+                columns: [
+                    {"title": "Rewards", "field": "reward_names"},
+                    {"title": "Count", "field": "count", "width": 75},
+                ]
+            });
+            $("#decimal-statistics").tabulator({
+                data: decimalStatistics,
+                layout: "fitColumns",
+                height: 800,
+                columns: [
+                    {"title": "After decimal", "field": "after_decimal"},
+                    {"title": "Amount", "field": "amount"},
+                ]
+            });
+            $("#anonymous-statistics").tabulator({
+                data: anonymousStatistics,
+                layout: "fitColumns",
+                columns: [
+                    {"title": "Who", "field": "who"},
+                    {"title": "Count", "field": "count", "width": 100},
+                    {
+                        "title": "Total raised", "field": "total", "formatter": "money",
+                        "formatterParams": moneyFormatterParams, "width": 200
+                    },
+                ]
+            });
+
+            let decimalWarColumns = [
+                {"title": "Total after decimal", "field": "after_decimal"},
+                {"title": "Minutes", "field": "minutes"},
+                {"title": "Percentage of total", "field": "percentage_of_total", "formatter": percentage},
+            ];
+            $("#decimal-war-statistics").tabulator({
+                data: decimalWarStatistics,
+                layout: "fitColumns",
+                columns: decimalWarColumns,
+            });
+            $("#decimal-war-stream-statistics").tabulator({
+                data: decimalWarStreamStatistics,
+                layout: "fitColumns",
+                columns: decimalWarColumns,
+            });
+
+            // Transform data for Chart.js
+            const labels = donationsBreakdown.map(([start, end]) => `($${start}-$${end}]`);
+            const data = donationsBreakdown.map(([,,count]) => count);
+
+            // Create the chart
+            const ctx = document.getElementById('donationsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Donations',
+                        data: data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Donations'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Donation Range'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Donations Breakdown'
+                        }
+                    }
+                }
+            });
+        })
+
+    </script>
+
+    <title>Project for Awesome 2026</title>
+
+    <style>
+        .tab-pane {
+            margin: 10px;
+        }
+
+        footer {
+            padding: 5px;
+        }
+
+        #myTabContent {
+            margin-bottom: 35px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Server Error (500)</h1><p></p>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="rewards-list-tab" data-bs-toggle="tab"
+                data-bs-target="#rewards-list-tab-pane"
+                type="button"
+                role="tab" aria-controls="rewards-list-tab-pane" aria-selected="true">
+            Rewards
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="rewards-tab" data-bs-toggle="tab" data-bs-target="#rewards-tab-pane"
+                type="button"
+                role="tab" aria-controls="rewards-tab-pane" aria-selected="false">
+            Reward statistics
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="donation-tab" data-bs-toggle="tab" data-bs-target="#donation-tab-pane"
+                type="button"
+                role="tab" aria-controls="donation-tab-pane" aria-selected="false">
+            Donation statistics
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="anonymous-tab" data-bs-toggle="tab" data-bs-target="#anonymous-tab-pane"
+                type="button"
+                role="tab" aria-controls="anonymous-tab-pane" aria-selected="false">
+            Anonymous statistics
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="decimal-stats-tab" data-bs-toggle="tab" data-bs-target="#decimal-stats-tab-pane"
+                type="button"
+                role="tab" aria-controls="decimal-stats-tab-pane" aria-selected="false">
+            Decimal value statistics
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="decimal-war-tab" data-bs-toggle="tab" data-bs-target="#decimal-war-tab-pane"
+                type="button" role="tab" aria-controls="decimal-war-tab-pane" aria-selected="false">
+            Decimal war
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="polls-tab" data-bs-toggle="tab" data-bs-target="#polls-tab-pane"
+                type="button" role="tab" aria-controls="polls-tab-pane" aria-selected="false">
+            Polls
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="donations-breakdown-tab" data-bs-toggle="tab" data-bs-target="#donations-breakdown-tab-pane"
+                type="button" role="tab" aria-controls="donations-breakdown-pane" aria-selected="false">
+            Donations breakdown
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="rewards-list-tab-pane" role="tabpanel" aria-labelledby="rewards-list-tab"
+         tabindex="0">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Rewards</h2>
+                    
+
+                    <div style="padding-bottom: 20px">
+                        <div class="btn-group">
+                            <button type="button" id="btn-reset-all" class="btn btn-success">Reset</button>
+                        </div>
+                        <div class="btn-group btn-availability">
+                            <button type="button" id="btn-availability-all" class="btn btn-primary">All</button>
+                            <button type="button" id="btn-availability-true" class="btn btn-secondary">Available
+                            </button>
+                            <button type="button" id="btn-availability-false" class="btn btn-secondary">Unavailable
+                            </button>
+                        </div>
+                        <div class="btn-group btn-limited">
+                            <button type="button" id="btn-limited-all" class="btn btn-primary">All</button>
+                            <button type="button" id="btn-limited-true" class="btn btn-secondary">Limited</button>
+                            <button type="button" id="btn-limited-false" class="btn btn-secondary">Unlimited</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" id="btn-count" class="btn btn-light">Showing 33</button>
+                        </div>
+                    </div>
+
+
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Exclusive Hankschannel Video <small>$10.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Hankschannel videos look their own kind of way, and this one is special…a real mess…the kind of mess one wouldn’t necessarily make public to the whole world. But hopefully the kind of mess you will enjoy!! It’s…long. Included in the Digital Download Bundle. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=89b494f2-41f3-4465-a19e-350ac991bda3" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356422/blob-9f58630a-b9c4-4861-a2bb-dcc9e8314519.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">One Chapter of Hank&#x27;s New Book (Audio Version!) <small>$10.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Hank recorded an audio version of the first chapter of his in-progress nonfiction book about cancer. Included in the Digital Download Bundle. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=18e97cf9-7559-42e7-8e79-cb7a54d78503" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356423/blob-1b47f78f-87f0-42e8-b46a-247f1934ff1a.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Zombicorns (Audiobook Version) <small>$10.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Stan Muller (aka Crash Course Stan) recorded an audiobook version of John&#x27;s P4A-exclusive 2010 Zombie Apocalypse novella Zombicorns! Included in the Digital Download Bundle. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=6e5d1f42-9751-4ff1-ba09-d564220131a9" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356421/blob-f0e6d189-24f3-4c74-a15f-57245014797a.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Zombicorns (PDF Version) <small>$10.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                The PDF version of John&#x27;s P4A-exclusive 2010 Zombie Apocalypse novella Zombicorns!  Included in the Digital Download Bundle. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=17b9ae1c-b48c-4e30-b965-098e5cccc54d" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356644/blob-d9a8a172-0d0b-428d-bcd4-ec25f5173e89.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Dadcast with Hank &amp; Travis <small>$15.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Hank Green and Travis McElroy have been dads for nine (!!) whole years now, and they&#x27;re gonna make content about it! We&#x27;ll collect questions from perk donors after P4A. Edited by Josef &quot;Tuna&quot; Metesh. Included in the Digital Download Bundle. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=1a85207b-32b1-4fd0-af5a-25e6b35386bd" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356425/blob-4c6a2f08-2215-469f-a6a1-17d5b3ed224c.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Exclusive Dear Hank &amp; John <small>$15.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                An exclusive episode of Dear Hank &amp; John! We&#x27;ll collect questions from perk donors after P4A. Edited by Josef &quot;Tuna&quot; Metesh. Included in the Digital Download Bundle. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=a22c4e4b-8601-4254-84e5-6bc8d4344a60" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356426/blob-70a4247c-59b1-45c3-b86a-6e93b975140c.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Exclusive The Anthropocene Reviewed <small>$15.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                An exclusive one-off episode of The Anthropocene Reviewed, written and edited by John Green just for P4A 2026! Included in the Digital Download Bundle. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=50764ae6-7458-41f7-9c84-0fe2eb785f8f" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356653/blob-69096782-d2ef-42fa-a836-e884272373cb.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Like Letters with John and Sarah <small>$15.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Sarah &amp; John share emails they wrote while falling in love and discuss what it all means in this P4A-exclusive podcast. Included in the Digital Download Bundle. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=875e3ace-2dca-4f37-91a6-5c57362b3112" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356427/blob-1a32c107-c339-41f6-bce5-d9b879028878.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Undeleted! A &quot;Delete This&quot; Special <small>$15.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Hank and Katherine have a podcast called “Delete This” and it is fun and silly. Join them for an episode *unstuck in time* (it is more of just a chat than interfacing with the news of the world.) Included in the Digital Download Bundle. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=c77cf442-884c-4a67-bc87-f58ca8c46f30" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356429/blob-9c258b89-c2a8-4994-adf5-e62e7a326321.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Pressed Penny Passports <small>$20.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                We&#x27;ve been smashing pennies every year of P4A, so get one of these booklets to proudly display your collection! Holds 40 pennies and 4 quarters. Designed by Rachel Calderon Navarro. Fair Market Value: $4
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        300 / 300
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=6bc4157c-f9ce-490a-b4c5-73ed9fa0e65e" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356139/blob-e5839164-a9eb-45ea-b27f-40b4450e302d.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A 2026 Acrylic Keychain <small>$25.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Take these little guys everywhere you go with this sparkly &amp; booty-full keychain! Designed by Rachel Calderon Navarro. Fair Market Value: $10
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=cba3102d-7e6a-4ff6-9f2d-38d68e448583" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356141/blob-6272ba31-38a7-4eb8-b977-723315a4fdce.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A 2026 Bandana Loca <small>$30.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Who needs a Banana Loca when you can look stylish in this Bandana Loca?! The details! The pickles! The BEANS! Designed by Rachel Calderon Navarro. Fair Market Value: $12
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=1173002d-6eae-4b37-8500-426df0aecf79" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356153/blob-424aa145-f42e-4387-b4b1-2df9b24cae82.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A 2026 Enamel Pin <small>$30.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Add to your pin collection with this Hanklerfish-themed P4A 2026 pin! Designed by Melanie Pascutoi. Fair Market Value: $12
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=2db02040-ac79-4a49-aac3-b059d51250d6" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356444/blob-3f31e231-4ad0-4b7d-86d3-23cceb4d47b2.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A 2026 Pressed Pennies <small>$30.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                We&#x27;ll be smashing pennies one FINAL TIME! This is your last chance to get 4 new P4A pennies, all designed by Rachel Calderon Navarro. Fair Market Value: $5
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        1199 / 1200
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=11156321-d6d4-49aa-baf7-bfd9870da4e4" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356379/blob-20a2cc7b-ce44-4097-a4cf-341b1841dbcc.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A 2026 Commemorative Coin <small>$40.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                This coin commemorates the 19th annual Project for Awesome (and glows in the dark)! Complete your set... or start your collection now! Designed by Melanie Pascutoi. Fair Market Value: $20
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=3be7ca6c-11b5-4a2c-8d87-2eeec96a9d5d" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356380/blob-8376dd3d-c99b-4c11-9940-2b8664147a93.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Fish Print Bundle (UNSIGNED) <small>$45.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                All 10 fish! If you love these magical 4 x 6&quot; fish designed by Mathias Ball, you can get all the fish in one bundle. Note: These fish prints are UNSIGNED. Individual signed fish prints will be released when guests join the livestream! Fair Market Value: $10
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=129d9fd0-0787-4c48-8c12-df35dc160c2b" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356382/blob-485cb969-3425-4dd0-a9e3-be571b04a655.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Mystery P4A Perks <small>$50.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A random set of ~3-4 perks from past P4As that will surprise and delight you! (We can&#x27;t guarantee you&#x27;ll receive something that you don&#x27;t already have.) Fair Market Value: $25
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        674 / 675
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=59d15903-b141-4314-8b35-abf03f17fc7b" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356385/blob-42c40f3f-228d-49ea-842c-7b1d335f217e.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A 2026 Dish Towel <small>$50.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Stay clean while you cook up a storm with this flippin&#x27; awesome P4A-mascot-themed dish towel. Designed by Rachel Calderon Navarro. Fair Market Value: $24
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=246881df-ca1e-47b3-a64a-913f708ffa71" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356386/blob-c8036fd4-5d6a-44b1-8923-9e0bd67813fb.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Sara Sandoval x Hank Green 2024 Print Set <small>$50.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                In 2024, Hank Green collaborated with Sara Sandoval on two pieces of art, and we&#x27;re offering P4A-exclusive prints once more! This perk includes two prints in an easily frameable 12 x 12&quot; inch format. Fair Market Value: $25
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        85 / 85
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=8eb8821b-92e9-4424-ac71-32469b7aeb1a" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356387/blob-246dfa02-f4bc-4b41-9346-9333ec258966.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Signed SciShow Script <small>$50.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A printed script from a random, recent SciShow video, signed by the host and crew! You&#x27;ll get a behind-the-scenes peek at what goes into their teleprompter. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        10 / 10
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=cb759893-1559-4784-a98d-44388a4f177c" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356388/blob-2d129acd-9b1d-4b7b-a7ba-1853ded4dabd.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Nerdfighter Art <small>$55.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                An original art piece created by a Nerdfighter! Fair Market Value: $27
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        1419 / 1420
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=678a79d0-c506-4dec-a22b-c7cc6aafaa29" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356445/blob-60a1dda3-8151-4c31-aa8a-407272c3a361.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A 2026 T-Shirt: XS - 5XL <small>$55.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Celebrate that feeling of harnessing a giant squid of anger to decrease world suck with the P4A 2026 t-shirt! Designed by Melanie Pascutoi. Size Chart: https://bit.ly/4t3vM0K Fair Market Value: $30
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=9a1d6d45-4077-4658-ace3-e90ead749203" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356442/blob-848bd1df-f1c9-46ce-a759-c10bda7afbf9.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Mystery 2024 Signed Quote Poster <small>$60.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A random 11 x 17&quot; quote poster from P4A 2024, designed by Kenton Hoppas. Each print is signed by EITHER Brennan Lee Mulligan, John Green, Hank Green, Alexis Nikole Nelson, Tyler Thrasher, Sabrina Cruz, Travis McElroy, or the SciShow Tangents hosts. (We can&#x27;t guarantee you&#x27;ll receive something that you don&#x27;t already have.) Fair Market Value: $50
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        460 / 460
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=afcc91b6-e2c9-484f-93e3-2dd8a5dff8b2" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356390/blob-86dcc8d0-fad7-4e48-8c8c-9071ec26992e.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Digital Download Bundle <small>$75.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A bunch of podcasts, videos, digital art, and more (including some bundle-exclusives like Nerdfighter-designed embroidery patterns or songs composed by livestream guests)! No personalized, limited-quantity, or subscription perks included. NOTE: The final Fair Market Value will be emailed out after the P4A Livestream, since more perks may be added.
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=b899ccf7-6fbf-431f-b0db-5ab42712fd0c" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356430/blob-2ea14bc7-2b43-4b3d-9570-9a933797ca42.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Your Name in the P4A Recap Video <small>$75.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Every year, we edit the entire P4A livestream down to a ~5-10 minute recap video. Your name will be featured in it as thanks for making it possible! Edited by Josef &quot;Tuna&quot; Metesh. Fair Market Value: $0
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        200 / 200
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=969bdba3-69e8-4581-b650-6a0b1cb401b5" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356431/blob-b65529fb-5d23-4c90-a741-860a405b9fc6.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-unlimited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A 2026 Crewneck Sweatshirt: XS-5XL <small>$95.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Stay cozy with the P4A 2026 crewneck sweatshirt! Designed by Melanie Pascutoi. Size Chart: https://bit.ly/4rbqsa8 Fair Market Value: $50
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        Unlimited
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=fa910ba4-39a9-47f3-b4fa-f632e76db96f" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356443/blob-05c0723f-f802-4b8d-8bc7-d660437742ed.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A Quilt by Nerdfighter Fabricdragon <small>$1500.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A handmade 52 x 52” quilt created for this year&#x27;s P4A with a rainbow of colorful scraps from another quilt, as a creative challenge. Made by Nerdfighter Fabricdragon. Fair Market Value: $500
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        1 / 1
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=b4f00436-f9d9-45e7-b78f-1ef0c56064f4" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356411/blob-b9c36bb6-99aa-4ecb-9a87-6c7b5fde7a54.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A Quilt by Nerdfighter Jacqueline <small>$1500.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A handmade 90 x 73&quot; quilt made just for this year&#x27;s P4A, featuring a radiating heart pattern! Made by Nerdfighter Jacqueline Kipping. Fair Market Value: $500
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        1 / 1
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=8e88a7f7-0bc4-440e-9804-35f8d50abc6a" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356412/blob-d531aa11-b245-4e44-9691-aa4dfca1e706.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A Quilt by Nerdfighter Jacqueline&#x27;s Mom <small>$1500.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A handmade 82 x 91&quot; quilt made just for this year&#x27;s P4A, featuring a rainbow pattern on one side and sunflowers on the other! Made by Nerdfighter Jacqueline Kipping&#x27;s Mom (a former professional quilter!) Fair Market Value: $500
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        1 / 1
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=22c35e0b-4c8a-460d-b52e-b638ce636771" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356413/blob-6388f77b-69d0-4a4d-990c-362dc3a0fc29.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A Quilt by Nerdfighter Kailey <small>$2000.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A handmade 60 x 60&quot; quilt made just for this year&#x27;s P4A, featuring the P4A heart logo in the center of a blocky warm and cool gradient! Made by Nerdfighter Kailey deWeever. Fair Market Value: $500
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        1 / 1
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=79cc11b3-4ddf-4343-88c6-82b5d1e8dc6f" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356415/blob-3299b910-ec9f-4bf6-bfca-d6d447991f76.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A &quot;We&#x27;re Here&quot; Quilt by Nerdfighter Rachael <small>$2000.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A handmade 70 x 72” quilt made just for this year&#x27;s P4A, with a raw edge appliqué of &quot;We&#x27;re Here Because.&quot; The top took 17 hours to create, all with Ruby Star Society fabrics. Made by Nerdfighter Rachael. Fair Market Value: $500
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        1 / 1
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=14cf17f5-bb68-48fd-a926-c4c3863c4402" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356414/blob-4454713e-340c-4a35-ae60-1e1979b8779c.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Kathleen GMs Pizzamas: The Second Slice for You! <small>$3000.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                Have you ever wanted to play Pizzamas: The Second Slice? You&#x27;ll receive a digital copy of the game (no longer available!) and a custom tabletop session run by Kathleen De Vere, the author of the custom Pizzamas D&amp;D games. The gameplay should take approximately 4-5 hours, and will be done over Discord, Zoom or another teleconferencing service (unless you and your players can get to Victoria, British Columbia, Canada). Fair Market Value: $750
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        1 / 1
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=bff93f69-6487-4d6e-a1e4-8d4cfbe46ece" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356439/blob-1ce96c8e-cae9-44fe-b95c-b442fd65ae97.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                        <div class="card card-active card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A Pizza John Quilt by Nerdfighter Rachael <small>$3000.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A handmade 54 x 72” quilt made just for this year&#x27;s P4A, with a pixelated Pizza John design made of 14 colors and 841 cut pieces of fabric, totaling 108 blocks. The top took 41 hours to assemble and it was a labor of pizza-y love! Made by Nerdfighter Rachael. Fair Market Value: $1000
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        1 / 1
+    
+</button>
+
+
+    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=03bf10e1-9d38-478f-83e5-50c5c5f03805" class="btn btn-sm btn-primary"
+       target="_blank">
+        Donate
+    </a>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356418/blob-bbcda4bd-5c70-4ced-983f-1c164a7b47d9.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="tab-pane fade" id="rewards-tab-pane" role="tabpanel" aria-labelledby="rewards-tab"
+         tabindex="0">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Reward statistics</h2>
+                    
+                    <p>The "sold out in" time is approximated from first and last donation time with that reward.</p>
+                    <div style="max-width: 1500px">
+                        <table id="reward-statistics"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="tab-pane fade" id="donation-tab-pane" role="tabpanel" aria-labelledby="donation-tab"
+         tabindex="0">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Donation statistics</h2>
+                    
+                    <div style="max-width: 500px; margin: 0 auto;">
+                        <table id="donation-statistics"></table>
+                    </div>
+                    <hr>
+                    <h2>Reward combinations</h2>
+                    <div style="max-width: 1500px; margin: 0 auto;">
+                        <table id="reward-combinations"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="tab-pane fade" id="anonymous-tab-pane" role="tabpanel" aria-labelledby="anonymous-tab" tabindex="0">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Anonymous statistics</h2>
+                    
+                    <div style="max-width: 500px; margin: 0 auto;">
+                        <table id="anonymous-statistics"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="decimal-stats-tab-pane" role="tabpanel" aria-labelledby="decimal-stats-tab"
+         tabindex="0">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Decimal value statistics</h2>
+                    
+                    <div style="max-width: 500px; margin: 0 auto">
+                        <table id="decimal-statistics"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="decimal-war-tab-pane" role="tabpanel" aria-labelledby="decimal-war-tab" tabindex="0">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Decimal war</h2>
+                    
+                    <p>
+                        <abbr title="This value may not be accurate as some donations are revoked after being made.">The total on Tiltify is currently: 10.00.</abbr>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h3>Overall</h3>
+                    <div style="max-width: 500px; margin-top: 50px">
+                        <table id="decimal-war-statistics"></table>
+                    </div>
+                </div>
+                <div class="col">
+                    <h3>During stream</h3>
+                    <div style="max-width: 500px; margin-top: 50px">
+                        <table id="decimal-war-stream-statistics"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="tab-pane fade" id="polls-tab-pane" role="tabpanel" aria-labelledby="polls-tab" tabindex="0">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Polls</h2>
+                    
+                    <table class="table" style="max-width: 2000px; margin: 0 auto;">
+                        <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th style="min-width: 190px">Created (UTC)</th>
+                            <th style="min-width: 120px">Total raised</th>
+                            <th style="min-width: 250px">Option</th>
+                            <th style="min-width: 120px">Raised</th>
+                            <th>Votes</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="donations-breakdown-tab-pane" role="tabpanel" aria-labelledby="donations-breakdown-tab" tabindex="0">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Donations breakdown</h2>
+                    <p>
+                    
+                        Start of range is inclusive, end of range is not exclusive. X axis is not proportional to size of donation.
+                    </p>
+                    <div style="max-width: 1200px; max-height: 600px; margin: 0 auto;">
+                        <canvas id="donationsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer fixed-bottom text-center bg-light">
+    Generated: Feb. 10, 2026, 5:10 p.m. UTC.
+    Developed by <a href="https://www.mikulaspoul.cz/" target="_blank">Miki</a>,
+    source on <a target="_blank" href="https://github.com/mikicz/p4a-portal">GitHub</a>.
+</footer>
+
+<script type="application/javascript">
+    let filters = {
+        availability: null,
+        virtual: null,
+        limited: null,
+    };
+
+    function getStr(key) {
+        if (filters[key] === true) return "true";
+        if (filters[key] === false) return "false";
+        return "all"
+    }
+
+    function updateButtons() {
+        $(".btn-availability .btn").removeClass("btn-primary").addClass("btn-secondary");
+        $(".btn-virtual .btn").removeClass("btn-primary").addClass("btn-secondary");
+        $(".btn-limited .btn").removeClass("btn-primary").addClass("btn-secondary");
+        $("#btn-availability-" + getStr("availability")).addClass("btn-primary").removeClass("btn-secondary");
+        $("#btn-virtual-" + getStr("virtual")).addClass("btn-primary").removeClass("btn-secondary");
+        $("#btn-limited-" + getStr("limited")).addClass("btn-primary").removeClass("btn-secondary");
+    }
+
+    function shouldShow(card) {
+        let show = true;
+        if (card.hasClass("card-active") && filters.availability === false) {
+            show = false;
+        }
+        if (card.hasClass("card-inactive") && filters.availability === true) {
+            show = false;
+        }
+        if (card.hasClass("card-limited") && filters.limited === false) {
+            show = false;
+        }
+        if (card.hasClass("card-unlimited") && filters.limited === true) {
+            show = false;
+        }
+
+        return show
+    }
+
+    function updateCards() {
+        let showing = 0;
+        $(".card").each(function () {
+            let card = $(this);
+            if (shouldShow(card)) {
+                card.slideDown();
+                showing += 1;
+            } else {
+                card.slideUp();
+            }
+        })
+        $("#btn-count").text("Showing " + showing)
+    }
+
+    function set(key, value) {
+        filters[key] = value;
+        updateButtons();
+        updateCards();
+    }
+
+    $(document).ready(function () {
+        $("#btn-reset-all").click(function () {
+            filters.availability = null;
+            filters.limited = null;
+            updateButtons();
+            updateCards();
+        });
+        $("#btn-availability-all").click(function () {
+            set("availability", null)
+        });
+        $("#btn-availability-true").click(function () {
+            set("availability", true)
+        });
+        $("#btn-availability-false").click(function () {
+            set("availability", false)
+        });
+        $("#btn-limited-all").click(function () {
+            set("limited", null)
+        });
+        $("#btn-limited-true").click(function () {
+            set("limited", true)
+        });
+        $("#btn-limited-false").click(function () {
+            set("limited", false)
+        });
+
+    })
+
+</script>
+
 </body>
+
 </html>
