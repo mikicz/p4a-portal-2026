@@ -30,46 +30,364 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     <script type="application/javascript">
-        let rewardStatistics = [];
-        let anonymousStatistics = [
+        let rewardStatistics = [
+  {
+    "count": 1,
+    "total": 1500.0,
+    "name": "P4A Quilt by Nerdfighter Jacqueline",
+    "base_price": 1500.0,
+    "percentage_of_total": 34.129692832764505,
+    "sold_out_in": "0:00:00"
+  },
+  {
+    "count": 17,
+    "total": 1275.0,
+    "name": "Digital Download Bundle",
+    "base_price": 75.0,
+    "percentage_of_total": 29.01023890784983,
+    "sold_out_in": null
+  },
+  {
+    "count": 6,
+    "total": 330.0,
+    "name": "Nerdfighter Art",
+    "base_price": 55.0,
+    "percentage_of_total": 7.508532423208192,
+    "sold_out_in": null
+  },
+  {
+    "count": 3,
+    "total": 180.0,
+    "name": "Mystery 2024 Signed Quote Poster",
+    "base_price": 60.0,
+    "percentage_of_total": 4.09556313993174,
+    "sold_out_in": null
+  },
+  {
+    "count": 5,
+    "total": 150.0,
+    "name": "P4A 2026 Pressed Pennies",
+    "base_price": 30.0,
+    "percentage_of_total": 3.4129692832764507,
+    "sold_out_in": null
+  },
+  {
+    "count": 3,
+    "total": 150.0,
+    "name": "Sara Sandoval x Hank Green 2024 Print Set",
+    "base_price": 50.0,
+    "percentage_of_total": 3.4129692832764507,
+    "sold_out_in": null
+  },
+  {
+    "count": 4,
+    "total": 120.0,
+    "name": "P4A 2026 Enamel Pin",
+    "base_price": 30.0,
+    "percentage_of_total": 2.7303754266211606,
+    "sold_out_in": null
+  },
+  {
+    "count": 3,
+    "total": 120.0,
+    "name": "P4A 2026 Commemorative Coin",
+    "base_price": 40.0,
+    "percentage_of_total": 2.7303754266211606,
+    "sold_out_in": null
+  },
+  {
+    "count": 1,
+    "total": 95.0,
+    "name": "P4A 2026 Crewneck Sweatshirt: XS-5XL",
+    "base_price": 95.0,
+    "percentage_of_total": 2.1615472127417523,
+    "sold_out_in": null
+  },
+  {
+    "count": 2,
+    "total": 90.0,
+    "name": "Fish Print Bundle (UNSIGNED)",
+    "base_price": 45.0,
+    "percentage_of_total": 2.04778156996587,
+    "sold_out_in": null
+  },
+  {
+    "count": 5,
+    "total": 75.0,
+    "name": "Exclusive The Anthropocene Reviewed",
+    "base_price": 15.0,
+    "percentage_of_total": 1.7064846416382253,
+    "sold_out_in": null
+  },
+  {
+    "count": 5,
+    "total": 75.0,
+    "name": "Exclusive Dear Hank & John",
+    "base_price": 15.0,
+    "percentage_of_total": 1.7064846416382253,
+    "sold_out_in": null
+  },
+  {
+    "count": 1,
+    "total": 55.0,
+    "name": "P4A 2026 T-Shirt: XS - 5XL",
+    "base_price": 55.0,
+    "percentage_of_total": 1.2514220705346986,
+    "sold_out_in": null
+  },
+  {
+    "count": 1,
+    "total": 50.0,
+    "name": "P4A 2026 Dish Towel",
+    "base_price": 50.0,
+    "percentage_of_total": 1.1376564277588168,
+    "sold_out_in": null
+  },
   {
     "count": 2,
     "total": 35.0,
+    "name": null,
+    "base_price": NaN,
+    "percentage_of_total": 0.7963594994311717,
+    "sold_out_in": null
+  },
+  {
+    "count": 1,
+    "total": 30.0,
+    "name": "P4A 2026 Bandana Loca",
+    "base_price": 30.0,
+    "percentage_of_total": 0.6825938566552902,
+    "sold_out_in": null
+  },
+  {
+    "count": 2,
+    "total": 20.0,
+    "name": "Exclusive Hankschannel Video",
+    "base_price": 10.0,
+    "percentage_of_total": 0.4550625711035267,
+    "sold_out_in": null
+  },
+  {
+    "count": 1,
+    "total": 20.0,
+    "name": "Pressed Penny Passports",
+    "base_price": 20.0,
+    "percentage_of_total": 0.4550625711035267,
+    "sold_out_in": null
+  },
+  {
+    "count": 1,
+    "total": 15.0,
+    "name": "Dadcast with Hank & Travis",
+    "base_price": 15.0,
+    "percentage_of_total": 0.3412969283276451,
+    "sold_out_in": null
+  },
+  {
+    "count": 1,
+    "total": 10.0,
+    "name": "Zombicorns (PDF Version)",
+    "base_price": 10.0,
+    "percentage_of_total": 0.22753128555176336,
+    "sold_out_in": null
+  }
+];
+        let anonymousStatistics = [
+  {
+    "count": 23,
+    "total": 2250.0,
     "who": "Other"
+  },
+  {
+    "count": 14,
+    "total": 2285.0,
+    "who": "Anonymous"
   }
 ];
         let decimalStatistics = [
   {
     "after_decimal": "00",
-    "amount": 2
+    "amount": 37
   }
 ];
         let decimalWarStatistics = [
   {
     "after_decimal": "00",
-    "minutes": 12.42,
+    "minutes": 39.51,
     "percentage_of_total": 100.0
   }
 ];
         let decimalWarStreamStatistics = [];
         let donationStatistics = [
   {
+    "rewards": 1,
+    "total": 1250.0,
+    "count": 19
+  },
+  {
+    "rewards": 2,
+    "total": 2395.0,
+    "count": 11
+  },
+  {
+    "rewards": 3,
+    "total": 295.0,
+    "count": 3
+  },
+  {
     "rewards": 0,
     "total": 35.0,
     "count": 2
+  },
+  {
+    "rewards": 7,
+    "total": 305.0,
+    "count": 1
+  },
+  {
+    "rewards": 5,
+    "total": 255.0,
+    "count": 1
   }
 ];
-        let rewardCombinations = [];
+        let rewardCombinations = [
+  {
+    "count": 2,
+    "reward_names": "Exclusive Dear Hank & John, Exclusive The Anthropocene Reviewed"
+  },
+  {
+    "count": 2,
+    "reward_names": "Digital Download Bundle, Nerdfighter Art"
+  },
+  {
+    "count": 1,
+    "reward_names": "P4A 2026 Commemorative Coin, P4A 2026 Pressed Pennies"
+  },
+  {
+    "count": 1,
+    "reward_names": "Digital Download Bundle, Sara Sandoval x Hank Green 2024 Print Set"
+  },
+  {
+    "count": 1,
+    "reward_names": "Digital Download Bundle, Mystery 2024 Signed Quote Poster, P4A 2026 Commemorative Coin, P4A 2026 Enamel Pin, P4A 2026 Pressed Pennies, Pressed Penny Passports, Sara Sandoval x Hank Green 2024 Print Set"
+  },
+  {
+    "count": 1,
+    "reward_names": "Nerdfighter Art, P4A Quilt by Nerdfighter Jacqueline"
+  },
+  {
+    "count": 1,
+    "reward_names": "Exclusive Dear Hank & John, Exclusive The Anthropocene Reviewed, P4A 2026 Pressed Pennies"
+  },
+  {
+    "count": 1,
+    "reward_names": "Exclusive Dear Hank & John, Exclusive Hankschannel Video"
+  },
+  {
+    "count": 1,
+    "reward_names": "Dadcast with Hank & Travis, P4A 2026 Bandana Loca, P4A 2026 Enamel Pin"
+  },
+  {
+    "count": 1,
+    "reward_names": "Exclusive Hankschannel Video, P4A 2026 Dish Towel"
+  },
+  {
+    "count": 1,
+    "reward_names": "Digital Download Bundle, Zombicorns (PDF Version)"
+  },
+  {
+    "count": 1,
+    "reward_names": "Mystery 2024 Signed Quote Poster, Nerdfighter Art"
+  },
+  {
+    "count": 1,
+    "reward_names": "Fish Print Bundle (UNSIGNED), P4A 2026 Crewneck Sweatshirt: XS-5XL, P4A 2026 Enamel Pin, P4A 2026 Pressed Pennies, P4A 2026 T-Shirt: XS - 5XL"
+  },
+  {
+    "count": 1,
+    "reward_names": "Fish Print Bundle (UNSIGNED), Mystery 2024 Signed Quote Poster, P4A 2026 Enamel Pin"
+  }
+];
         let moneyFormatterParams = {"symbol": "$"};
         let donationsBreakdown = [
   [
     10,
     20,
-    1
+    4
   ],
   [
     20,
     30,
+    2
+  ],
+  [
+    30,
+    40,
+    3
+  ],
+  [
+    40,
+    50,
+    1
+  ],
+  [
+    50,
+    60,
+    1
+  ],
+  [
+    60,
+    70,
+    1
+  ],
+  [
+    70,
+    80,
+    12
+  ],
+  [
+    80,
+    90,
+    1
+  ],
+  [
+    100,
+    110,
+    2
+  ],
+  [
+    110,
+    120,
+    2
+  ],
+  [
+    120,
+    130,
+    1
+  ],
+  [
+    130,
+    140,
+    3
+  ],
+  [
+    150,
+    160,
+    1
+  ],
+  [
+    250,
+    260,
+    1
+  ],
+  [
+    300,
+    310,
+    1
+  ],
+  [
+    1550,
+    1560,
     1
   ]
 ];
@@ -297,6 +615,8 @@
             <div class="row">
                 <div class="col">
                     <h2>Rewards</h2>
+                    
+                        <p>Data last retrieved Feb. 10, 2026, 5:40 p.m. UTC</p>
                     
 
                     <div style="padding-bottom: 20px">
@@ -650,7 +970,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        300 / 300
+        299 / 300
     
 </button>
 
@@ -790,7 +1110,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        1198 / 1200
+        1194 / 1200
     
 </button>
 
@@ -965,7 +1285,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        83 / 85
+        80 / 85
     
 </button>
 
@@ -1035,7 +1355,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        1416 / 1420
+        1411 / 1420
     
 </button>
 
@@ -1105,7 +1425,7 @@
                                             </p>
                                             <button class="btn btn-sm btn-info">
     
-        459 / 460
+        457 / 460
     
 </button>
 
@@ -1260,41 +1580,6 @@
                                     </div>
                                     <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
                                         <img src="https://assets.tiltify.com/uploads/reward/image/356411/blob-b9c36bb6-99aa-4ecb-9a87-6c7b5fde7a54.png" class="img-fluid rounded-end"
-                                             style="max-height: 175px; max-width: 175px; padding: 5px"
-                                             alt="alt" title="alt">
-                                    </div>
-                                </div>
-                            
-                        </div>
-                    
-                        <div class="card card-active card-limited"
-                             style="margin-bottom: 5px">
-                            
-                                <div class="row">
-                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
-                                        <div class="card-body">
-                                            <h5 class="card-title">P4A Quilt by Nerdfighter Jacqueline <small>$1500.00</small>
-                                            </h5>
-                                            <p class="card-text">
-                                                A handmade 90 x 73&quot; quilt made just for this year&#x27;s P4A, featuring a radiating heart pattern! Made by Nerdfighter Jacqueline Kipping. Fair Market Value: $500
-                                            </p>
-                                            <button class="btn btn-sm btn-info">
-    
-        1 / 1
-    
-</button>
-
-
-    <a href="https://donate.tiltify.com/+p4a-producers/project-for-awesome-2026/?rewardPublicId=8e88a7f7-0bc4-440e-9804-35f8d50abc6a" class="btn btn-sm btn-primary"
-       target="_blank">
-        Donate
-    </a>
-
-
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
-                                        <img src="https://assets.tiltify.com/uploads/reward/image/356412/blob-d531aa11-b245-4e44-9691-aa4dfca1e706.png" class="img-fluid rounded-end"
                                              style="max-height: 175px; max-width: 175px; padding: 5px"
                                              alt="alt" title="alt">
                                     </div>
@@ -1477,6 +1762,36 @@
                             
                         </div>
                     
+                        <div class="card card-inactive card-limited"
+                             style="margin-bottom: 5px">
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-8 col-xl-9 col-xxl-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">P4A Quilt by Nerdfighter Jacqueline <small>$1500.00</small>
+                                            </h5>
+                                            <p class="card-text">
+                                                A handmade 90 x 73&quot; quilt made just for this year&#x27;s P4A, featuring a radiating heart pattern! Made by Nerdfighter Jacqueline Kipping. Fair Market Value: $500
+                                            </p>
+                                            <button class="btn btn-sm btn-info">
+    
+        0 / 1
+    
+</button>
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-2 text-end">
+                                        <img src="https://assets.tiltify.com/uploads/reward/image/356412/blob-d531aa11-b245-4e44-9691-aa4dfca1e706.png" class="img-fluid rounded-end"
+                                             style="max-height: 175px; max-width: 175px; padding: 5px"
+                                             alt="alt" title="alt">
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
                 </div>
             </div>
         </div>
@@ -1488,6 +1803,8 @@
             <div class="row">
                 <div class="col">
                     <h2>Reward statistics</h2>
+                    
+                        <p>Data last retrieved Feb. 10, 2026, 5:40 p.m. UTC</p>
                     
                     <p>The "sold out in" time is approximated from first and last donation time with that reward.</p>
                     <div style="max-width: 1500px">
@@ -1504,6 +1821,8 @@
             <div class="row">
                 <div class="col">
                     <h2>Donation statistics</h2>
+                    
+                        <p>Data last retrieved Feb. 10, 2026, 5:40 p.m. UTC</p>
                     
                     <div style="max-width: 500px; margin: 0 auto;">
                         <table id="donation-statistics"></table>
@@ -1524,6 +1843,8 @@
                 <div class="col">
                     <h2>Anonymous statistics</h2>
                     
+                        <p>Data last retrieved Feb. 10, 2026, 5:40 p.m. UTC</p>
+                    
                     <div style="max-width: 500px; margin: 0 auto;">
                         <table id="anonymous-statistics"></table>
                     </div>
@@ -1538,6 +1859,10 @@
                 <div class="col">
                     <h2>Decimal value statistics</h2>
                     
+                        <p>
+                            <abbr title="More donations could have been made since!">Data last retrieved Feb. 10, 2026, 5:40 p.m. UTC</abbr>
+                        </p>
+                    
                     <div style="max-width: 500px; margin: 0 auto">
                         <table id="decimal-statistics"></table>
                     </div>
@@ -1551,8 +1876,10 @@
                 <div class="col">
                     <h2>Decimal war</h2>
                     
+                        <p>Data last retrieved Feb. 10, 2026, 5:40 p.m. UTC</p>
+                    
                     <p>
-                        <abbr title="This value may not be accurate as some donations are revoked after being made.">The total on Tiltify is currently: 35.00.</abbr>
+                        <abbr title="This value may not be accurate as some donations are revoked after being made.">The total on Tiltify is currently: 4535.00.</abbr>
                     </p>
                 </div>
             </div>
@@ -1611,6 +1938,8 @@
                     <h2>Donations breakdown</h2>
                     <p>
                     
+                        Data last retrieved Feb. 10, 2026, 5:40 p.m. UTC.
+                    
                         Start of range is inclusive, end of range is not exclusive. X axis is not proportional to size of donation.
                     </p>
                     <div style="max-width: 1200px; max-height: 600px; margin: 0 auto;">
@@ -1622,7 +1951,7 @@
     </div>
 </div>
 <footer class="footer fixed-bottom text-center bg-light">
-    Generated: Feb. 10, 2026, 5:34 p.m. UTC.
+    Generated: Feb. 10, 2026, 5:44 p.m. UTC.
     Developed by <a href="https://www.mikulaspoul.cz/" target="_blank">Miki</a>,
     source on <a target="_blank" href="https://github.com/mikicz/p4a-portal">GitHub</a>.
 </footer>
